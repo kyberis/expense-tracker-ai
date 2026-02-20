@@ -3,12 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { loginUser } from "@/lib/auth";
-import { useAuth } from "@/lib/auth-context";
+import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { setUser } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -22,22 +20,25 @@ export default function LoginPage() {
     if (!password) return setError("Password is required");
 
     setLoading(true);
-    const result = await loginUser(email, password);
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
     setLoading(false);
 
-    if (!result.ok) {
-      setError(result.error);
+    if (result?.error) {
+      setError("Invalid email or password");
       return;
     }
 
-    setUser(result.user);
     router.push("/");
+    router.refresh();
   }
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
-        {/* Logo */}
         <div className="text-center mb-8">
           <div className="w-14 h-14 bg-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -48,7 +49,6 @@ export default function LoginPage() {
           <p className="text-sm text-gray-500 mt-1">Sign in to your ExpenseTracker account</p>
         </div>
 
-        {/* Form */}
         <div className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 shadow-sm">
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (

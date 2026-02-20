@@ -2,8 +2,12 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Expense, ExpenseFilters } from "./types";
-import { getExpenses, saveExpenses, deleteExpense as removeExpense } from "./storage";
-import { v4 as uuidv4 } from "uuid";
+import {
+  getExpenses,
+  addExpense as apiAddExpense,
+  updateExpense as apiUpdateExpense,
+  deleteExpense as apiDeleteExpense,
+} from "./storage";
 
 const DEFAULT_FILTERS: ExpenseFilters = {
   search: "",
@@ -19,41 +23,33 @@ export function useExpenses() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    setExpenses(getExpenses());
-    setIsLoaded(true);
+    getExpenses().then((data) => {
+      setExpenses(data);
+      setIsLoaded(true);
+    });
   }, []);
 
   const addExpense = useCallback(
-    (data: { amount: number; category: Expense["category"]; description: string; date: string }) => {
-      const expense: Expense = {
-        id: uuidv4(),
-        ...data,
-        createdAt: new Date().toISOString(),
-      };
-      const updated = [expense, ...expenses];
-      setExpenses(updated);
-      saveExpenses(updated);
+    async (data: { amount: number; category: Expense["category"]; description: string; date: string }) => {
+      const expense = await apiAddExpense(data);
+      setExpenses((prev) => [expense, ...prev]);
       return expense;
-    },
-    [expenses]
-  );
-
-  const editExpense = useCallback(
-    (id: string, data: Partial<Omit<Expense, "id" | "createdAt">>) => {
-      const updated = expenses.map((e) => (e.id === id ? { ...e, ...data } : e));
-      setExpenses(updated);
-      saveExpenses(updated);
-    },
-    [expenses]
-  );
-
-  const deleteExpense = useCallback(
-    (id: string) => {
-      const updated = removeExpense(id);
-      setExpenses(updated);
     },
     []
   );
+
+  const editExpense = useCallback(
+    async (id: string, data: Partial<Omit<Expense, "id" | "createdAt">>) => {
+      const updated = await apiUpdateExpense(id, data);
+      setExpenses((prev) => prev.map((e) => (e.id === id ? updated : e)));
+    },
+    []
+  );
+
+  const deleteExpense = useCallback(async (id: string) => {
+    await apiDeleteExpense(id);
+    setExpenses((prev) => prev.filter((e) => e.id !== id));
+  }, []);
 
   const resetFilters = useCallback(() => {
     setFilters(DEFAULT_FILTERS);

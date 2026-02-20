@@ -1,44 +1,37 @@
 import { Expense } from "./types";
-import { getSession } from "./auth";
 
-function storageKey(): string {
-  const session = getSession();
-  const userId = session?.id ?? "anonymous";
-  return `expense-tracker-expenses-${userId}`;
+export async function getExpenses(): Promise<Expense[]> {
+  const res = await fetch("/api/expenses");
+  if (!res.ok) return [];
+  return res.json();
 }
 
-export function getExpenses(): Expense[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const data = localStorage.getItem(storageKey());
-    return data ? JSON.parse(data) : [];
-  } catch {
-    return [];
-  }
+export async function addExpense(
+  data: Omit<Expense, "id" | "createdAt" | "userId">
+): Promise<Expense> {
+  const res = await fetch("/api/expenses", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error("Failed to add expense");
+  return res.json();
 }
 
-export function saveExpenses(expenses: Expense[]): void {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(storageKey(), JSON.stringify(expenses));
+export async function updateExpense(
+  id: string,
+  data: Partial<Omit<Expense, "id" | "createdAt" | "userId">>
+): Promise<Expense> {
+  const res = await fetch(`/api/expenses/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error("Failed to update expense");
+  return res.json();
 }
 
-export function addExpense(expense: Expense): Expense[] {
-  const expenses = getExpenses();
-  expenses.unshift(expense);
-  saveExpenses(expenses);
-  return expenses;
-}
-
-export function updateExpense(updated: Expense): Expense[] {
-  const expenses = getExpenses().map((e) =>
-    e.id === updated.id ? updated : e
-  );
-  saveExpenses(expenses);
-  return expenses;
-}
-
-export function deleteExpense(id: string): Expense[] {
-  const expenses = getExpenses().filter((e) => e.id !== id);
-  saveExpenses(expenses);
-  return expenses;
+export async function deleteExpense(id: string): Promise<void> {
+  const res = await fetch(`/api/expenses/${id}`, { method: "DELETE" });
+  if (!res.ok) throw new Error("Failed to delete expense");
 }

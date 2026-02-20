@@ -15,12 +15,12 @@ export default function ExpensesPage() {
 
   const filtered = filterExpenses(expenses, filters);
 
-  function handleSubmit(data: Parameters<typeof addExpense>[0]) {
+  async function handleSubmit(data: Parameters<typeof addExpense>[0]) {
     if (editingExpense) {
-      editExpense(editingExpense.id, data);
+      await editExpense(editingExpense.id, data);
       setEditingExpense(null);
     } else {
-      addExpense(data);
+      await addExpense(data);
     }
     setShowForm(false);
   }

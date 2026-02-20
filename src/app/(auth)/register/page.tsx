@@ -3,12 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { registerUser } from "@/lib/auth";
-import { useAuth } from "@/lib/auth-context";
+import { signIn } from "next-auth/react";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { setUser } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,22 +25,40 @@ export default function RegisterPage() {
     if (password !== confirmPassword) return setError("Passwords do not match");
 
     setLoading(true);
-    const result = await registerUser(name, email, password);
-    setLoading(false);
 
-    if (!result.ok) {
-      setError(result.error);
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password }),
+    });
+
+    if (!res.ok) {
+      const data = await res.json();
+      setError(data.error || "Registration failed");
+      setLoading(false);
       return;
     }
 
-    setUser(result.user);
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+
+    setLoading(false);
+
+    if (result?.error) {
+      setError("Account created but sign-in failed. Please sign in manually.");
+      return;
+    }
+
     router.push("/");
+    router.refresh();
   }
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
-        {/* Logo */}
         <div className="text-center mb-8">
           <div className="w-14 h-14 bg-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -53,7 +69,6 @@ export default function RegisterPage() {
           <p className="text-sm text-gray-500 mt-1">Start tracking your expenses today</p>
         </div>
 
-        {/* Form */}
         <div className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 shadow-sm">
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (

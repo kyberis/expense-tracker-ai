@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useAuth } from "@/lib/auth-context";
+import { usePathname } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
 
 const nav = [
@@ -28,12 +28,11 @@ const nav = [
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const router = useRouter();
-  const { user, logout } = useAuth();
+  const { data: session } = useSession();
+  const user = session?.user;
 
   function handleLogout() {
-    logout();
-    router.push("/login");
+    signOut({ callbackUrl: "/login" });
   }
 
   const initials = user?.name
@@ -81,7 +80,6 @@ export default function Sidebar() {
           ))}
         </nav>
 
-        {/* User section */}
         {user && (
           <div className="mx-3 mb-3 p-3 bg-gray-50 rounded-xl">
             <div className="flex items-center gap-2.5">
