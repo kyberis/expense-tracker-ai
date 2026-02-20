@@ -203,6 +203,18 @@ This entire application was generated from the following prompt using an AI codi
 > - Dashboard with spending summaries and basic analytics
 > - Categories: Food, Transportation, Entertainment, Shopping, Bills, Other
 >
+> **AUTHENTICATION & MULTI-USER:**
+> - User registration (create new account with name, email, password)
+> - Login with email and password
+> - Support multiple user accounts, each with their own private data
+> - Session management and protected routes
+>
+> **DATABASE & DEPLOYMENT:**
+> - Store all user accounts and expense data in a PostgreSQL database (Vercel Postgres / Neon)
+> - Use Prisma as the ORM
+> - Use NextAuth.js for authentication with credentials provider
+> - Deploy to Vercel with persistent server-side storage (not localStorage)
+>
 > **TECHNICAL REQUIREMENTS:**
 > - NextJS 14 with App Router
 > - TypeScript for type safety
@@ -221,11 +233,9 @@ This entire application was generated from the following prompt using an AI codi
 > - Mobile-responsive design
 >
 > **SPECIFIC FUNCTIONALITY:**
-> - New Account / Allow login / Multiple accounts
 > - Expense form with validation
 > - Expense list with search and filter capabilities
 > - Summary cards showing total spending, monthly spending, top categories
 > - Basic charts or visual representations of spending patterns
 > - Export functionality (at least CSV)
 > - Delete and edit existing expenses
-> - Deploy to Vercel with Vercel Postgres for persistent user and expense storage
