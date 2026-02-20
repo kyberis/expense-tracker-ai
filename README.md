@@ -184,3 +184,48 @@ src/
 └── types/
     └── next-auth.d.ts            # NextAuth type augmentation
 ```
+
+---
+
+## The Prompt That Built This
+
+This entire application was generated from the following prompt using an AI coding assistant:
+
+> I want you to create a modern, professional NextJS expense tracking application. Here's my vision:
+>
+> **APPLICATION OVERVIEW:**
+> Build a complete expense tracking web app that helps users manage their personal finances. The app should feel modern, intuitive, and professional.
+>
+> **CORE FEATURES:**
+> - Add expenses with date, amount, category, and description
+> - View expenses in a clean, organized list
+> - Filter expenses by date range and category
+> - Dashboard with spending summaries and basic analytics
+> - Categories: Food, Transportation, Entertainment, Shopping, Bills, Other
+>
+> **TECHNICAL REQUIREMENTS:**
+> - NextJS 14 with App Router
+> - TypeScript for type safety
+> - Tailwind CSS for styling with a modern, clean design
+> - Responsive design that works on desktop and mobile
+> - Use React hooks for state management
+> - Form validation for expense inputs
+> - Date picker for expense dates
+> - Currency formatting for amounts
+>
+> **DESIGN REQUIREMENTS:**
+> - Clean, modern interface with a professional color scheme
+> - Intuitive navigation and user experience
+> - Visual feedback for user actions
+> - Loading states and error handling
+> - Mobile-responsive design
+>
+> **SPECIFIC FUNCTIONALITY:**
+> - New Account / Allow login / Multiple accounts
+> - Expense form with validation
+> - Expense list with search and filter capabilities
+> - Summary cards showing total spending, monthly spending, top categories
+> - Basic charts or visual representations of spending patterns
+> - Export functionality (at least CSV)
+> - Delete and edit existing expenses
+> - Deploy to Vercel with Vercel Postgres for persistent user and expense storage
