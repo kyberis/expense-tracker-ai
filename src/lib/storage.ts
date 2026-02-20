@@ -1,11 +1,16 @@
 import { Expense } from "./types";
+import { getSession } from "./auth";
 
-const STORAGE_KEY = "expense-tracker-expenses";
+function storageKey(): string {
+  const session = getSession();
+  const userId = session?.id ?? "anonymous";
+  return `expense-tracker-expenses-${userId}`;
+}
 
 export function getExpenses(): Expense[] {
   if (typeof window === "undefined") return [];
   try {
-    const data = localStorage.getItem(STORAGE_KEY);
+    const data = localStorage.getItem(storageKey());
     return data ? JSON.parse(data) : [];
   } catch {
     return [];
@@ -14,7 +19,7 @@ export function getExpenses(): Expense[] {
 
 export function saveExpenses(expenses: Expense[]): void {
   if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
+  localStorage.setItem(storageKey(), JSON.stringify(expenses));
 }
 
 export function addExpense(expense: Expense): Expense[] {

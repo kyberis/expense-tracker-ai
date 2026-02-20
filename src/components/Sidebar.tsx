@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useAuth } from "@/lib/auth-context";
 import { cn } from "@/lib/utils";
 
 const nav = [
@@ -27,6 +28,22 @@ const nav = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { user, logout } = useAuth();
+
+  function handleLogout() {
+    logout();
+    router.push("/login");
+  }
+
+  const initials = user?.name
+    ? user.name
+        .split(" ")
+        .map((w) => w[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2)
+    : "?";
 
   return (
     <>
@@ -45,6 +62,7 @@ export default function Sidebar() {
             </div>
           </Link>
         </div>
+
         <nav className="flex-1 px-3 space-y-1">
           {nav.map((item) => (
             <Link
@@ -62,10 +80,30 @@ export default function Sidebar() {
             </Link>
           ))}
         </nav>
-        <div className="p-4 mx-3 mb-3 bg-gray-50 rounded-xl">
-          <p className="text-xs font-medium text-gray-500">Data stored locally</p>
-          <p className="text-[11px] text-gray-400 mt-0.5">All data is saved in your browser&apos;s localStorage</p>
-        </div>
+
+        {/* User section */}
+        {user && (
+          <div className="mx-3 mb-3 p-3 bg-gray-50 rounded-xl">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center text-white text-xs font-bold shrink-0">
+                {initials}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-gray-900 truncate">{user.name}</p>
+                <p className="text-[11px] text-gray-400 truncate">{user.email}</p>
+              </div>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="mt-2.5 w-full flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              Sign out
+            </button>
+          </div>
+        )}
       </aside>
 
       {/* Mobile bottom nav */}
@@ -84,6 +122,15 @@ export default function Sidebar() {
               {item.label}
             </Link>
           ))}
+          <button
+            onClick={handleLogout}
+            className="flex flex-col items-center gap-1 px-4 py-1.5 rounded-lg text-xs font-medium text-gray-400 transition-colors"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            Sign out
+          </button>
         </div>
       </nav>
     </>
