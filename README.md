@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ExpenseTracker — Personal Finance Manager
+
+A modern, professional expense tracking web application built with Next.js 14, TypeScript, and Tailwind CSS.
+
+![Dashboard](https://img.shields.io/badge/Next.js-14-black) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue) ![Tailwind](https://img.shields.io/badge/Tailwind_CSS-3-38bdf8)
+
+## Features
+
+- **Dashboard** with summary cards (total, monthly, weekly, average spending)
+- **Interactive Charts** — monthly trend (bar), daily spending (area), category breakdown (donut) via Recharts
+- **Expense CRUD** — add, edit, and delete expenses with form validation
+- **Search & Filter** — by text, category, date range, with multiple sort options
+- **CSV Export** of all or filtered expenses
+- **Data Persistence** via localStorage
+- **Responsive Design** — desktop sidebar + mobile bottom navigation
+- **Categories**: Food, Transportation, Entertainment, Shopping, Bills, Other
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Framework**: Next.js 14 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Charts**: Recharts
+- **Date Utilities**: date-fns
+- **State**: React hooks + localStorage
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── app/(app)/
+│   ├── page.tsx              # Dashboard
+│   ├── layout.tsx            # App shell with sidebar
+│   └── expenses/page.tsx     # Expense management
+├── components/
+│   ├── Charts.tsx            # Bar, Area, and Pie charts
+│   ├── ExpenseFilters.tsx    # Search, category, date, sort
+│   ├── ExpenseForm.tsx       # Add/edit form with validation
+│   ├── ExpenseList.tsx       # List with edit/delete actions
+│   ├── RecentExpenses.tsx    # Recent expenses widget
+│   ├── Sidebar.tsx           # Desktop sidebar + mobile nav
+│   ├── SummaryCards.tsx      # Spending summary cards
+│   └── TopCategories.tsx     # Category progress bars
+└── lib/
+    ├── hooks.ts              # useExpenses, useDebounce
+    ├── storage.ts            # localStorage CRUD
+    ├── types.ts              # TypeScript types & constants
+    └── utils.ts              # Formatting, filtering, analytics, CSV
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Original Prompt
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+> Build a complete expense tracking web app that helps users manage their personal finances. The app should feel modern, intuitive, and professional.
+>
+> **CORE FEATURES:**
+> - Add expenses with date, amount, category, and description
+> - View expenses in a clean, organized list
+> - Filter expenses by date range and category
+> - Dashboard with spending summaries and basic analytics
+> - Categories: Food, Transportation, Entertainment, Shopping, Bills, Other
+> - Data persistence using localStorage for this demo
+>
+> **TECHNICAL REQUIREMENTS:**
+> - NextJS 14 with App Router
+> - TypeScript for type safety
+> - Tailwind CSS for styling with a modern, clean design
+> - Responsive design that works on desktop and mobile
+> - Use React hooks for state management
+> - Form validation for expense inputs
+> - Date picker for expense dates
+> - Currency formatting for amounts
+>
+> **DESIGN REQUIREMENTS:**
+> - Clean, modern interface with a professional color scheme
+> - Intuitive navigation and user experience
+> - Visual feedback for user actions
+> - Loading states and error handling
+> - Mobile-responsive design
+>
+> **SPECIFIC FUNCTIONALITY:**
+> - Expense form with validation
+> - Expense list with search and filter capabilities
+> - Summary cards showing total spending, monthly spending, top categories
+> - Basic charts or visual representations of spending patterns
+> - Export functionality (at least CSV)
+> - Delete and edit existing expenses
